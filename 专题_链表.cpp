@@ -123,16 +123,16 @@ ListNode *MergeSortedList(ListNode *l1,ListNode *l2){
 bool isCircleList(ListNode *pHead){
 	ListNode *pAhead = pHead;
 	ListNode *pBehind = pHead;
-	while( pHead!= NULL && pHead->m_pNext != NULL){
-		pAhead = pAhead->m_pNext;
-		pBehind = pBehind->m_pNext->m_pNext;
+	while( pAhead!= NULL && pAhead->m_pNext != NULL){
+		pAhead = pAhead->m_pNext->m_pNext;
+		pBehind = pBehind->m_pNext;
 		if(pAhead == pBehind)
 			return true;
 	}
 	return false;
 }
 
-//8. 判断两个单链表是否相交
+//8. 判断两个单链表是否相交 （相交的话后半段是相同的）
 bool isIntersected(ListNode *l1, ListNode *l2){
 	if(l1 == NULL || l1 == NULL)
 		return false;
@@ -146,3 +146,111 @@ bool isIntersected(ListNode *l1, ListNode *l2){
 }
 
 //9. 求两个单链表相交的第一个节点
+ListNode *GetFirstCommonNode(ListNode *l1, ListNode *l2){
+	if(l1 == NULL || l2 == NULL)
+		return NULL;
+	int len1 = 1;
+	ListNode *pNode1 = l1;
+	while(pNode1 -> m_pNext != NULL){
+		pNode1 = pNode1 -> m_pNext;
+		len1 ++;
+	}
+	int len2 = 1;
+	ListNode *pNode2 = l2;
+	while(pNode2 -> m_pNext != NULL){
+		pNode2 = pNode2 -> m_pNext;
+		len2 ++;
+	}
+	if(pNode1 != pNode2)
+		return NULL;
+
+	ListNode *pNode11 = l1;
+	ListNode *pNode22 = l2;
+	if(len1 > len2){
+		int k = len1 - len2;
+		while(k--)
+			pNode11 = pNode11 -> m_pNext;
+	}
+	else{
+		int k = len2 - len1;
+		while(k--)
+			pNode22 = pNode22 -> m_pNext;
+	}
+	while(pNode11 != pNode22){
+		pNode11 = pNode11 -> m_pNext;
+		pNode22 = pNode22 -> m_pNext;
+	}
+	return pNode11;
+}
+
+//10. 已知一个单链表中存在环，求进入环中的第一个节点
+ListNode *GetFirstNodeInCircle(ListNode *pHead){
+	if (pHead == NULL || pHead -> m_pNext == NULL)
+		return NULL;
+	ListNode *pFast = pHead;
+	ListNode *pSlow = pHead;
+	while(pFast != NULL && pFast-> m_pNext != NULL){
+		pFast = pFast -> m_pNext -> m_pNext;
+		pSlow = pSlow -> m_pNext;
+		if(pFast == pSlow)
+			break;
+	}
+	//若不相交，直接退出
+	if( pFast == NULL && pFast -> m_pNext == NULL )
+		return NULL;
+	ListNode *end = pSlow;
+	ListNode *pHead1 = pHead;
+	ListNode *pHead2 = end -> m_pNext;
+	int len1 = 1;
+	ListNode *pNode1 = pHead1;
+	while(pNode1 != end){
+		pNode1 = pNode1 ->m_pNext;
+		len++;
+	}
+	int len2 = 1;
+	ListNode *pNode2 = pHead2;
+	while(pNode2 != end){
+		pNode2 = pNode2 ->m_pNext;
+		len++;
+	}
+
+	ListNode *pNode11 = pHead1;
+	ListNode *pNode11 = pHead1;
+	if(len1 > len2){
+		int k = len1 - len2;
+		while(k--)
+			pNode11 = pNode11 ->m_pNext;
+	}
+	else{
+		int k = len2 - len1;
+		while(k--)
+			pNode22 = pNode22 ->m_pNext;
+	}
+	while(pNode11 != pNode22){
+		pNode11 = pNode11 ->m_pNext;
+		pNode22 = pNode22 -> m_pNext;
+	}
+	return pNode11;
+}
+
+//11. 给出一单链表头指针pHead和一节点指针pToBeDeleted，O(1)时间复杂度删除节点pToBeDeleted
+void Delete(ListNode * pHead, ListNode * pToBeDeleted){
+	if(pToBeDeleted == NULL)
+		return NULL;
+	if(pToBeDeleted -> m_pNext != NULL ){
+		pToBeDeleted->m_nKey = pToBeDeleted -> m_pNext ->m_nKey;
+		ListNode *temp = pToBeDeleted;
+		pToBeDeleted->m_pNext = pToBeDeleted ->m_pNext->m_pNext;
+	}
+	else{ //要删除节点为尾结点情况
+		if(pHead == pToBeDeleted){
+			delete pHead;
+			break;
+		}
+		ListNode *pNode = pHead;
+		while(pNode -> m_pNext !=  pToBeDeleted)
+			pNode = pNode->m_pNext;  
+		pNode ->m_pNext = NULL;
+		delete pToBeDeleted;
+	}
+}
