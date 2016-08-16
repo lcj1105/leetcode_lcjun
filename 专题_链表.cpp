@@ -121,12 +121,12 @@ ListNode *MergeSortedList(ListNode *l1,ListNode *l2){
 
 //7. 判断一个单链表中是否有环
 bool isCircleList(ListNode *pHead){
-	ListNode *pAhead = pHead;
-	ListNode *pBehind = pHead;
-	while( pAhead!= NULL && pAhead->m_pNext != NULL){
-		pAhead = pAhead->m_pNext->m_pNext;
-		pBehind = pBehind->m_pNext;
-		if(pAhead == pBehind)
+	ListNode *pFast = pHead;
+	ListNode *pSlow = pHead;
+	while( pFast!= NULL && pFast->m_pNext != NULL){
+		pFast = pFast->m_pNext->m_pNext;
+		pSlow = pSlow->m_pNext;
+		if(pFast == pSlow)
 			return true;
 	}
 	return false;
@@ -196,7 +196,7 @@ ListNode *GetFirstNodeInCircle(ListNode *pHead){
 			break;
 	}
 	//若不相交，直接退出
-	if( pFast == NULL && pFast -> m_pNext == NULL )
+	if( pFast == NULL || pFast -> m_pNext == NULL )
 		return NULL;
 	ListNode *end = pSlow;
 	ListNode *pHead1 = pHead;
@@ -238,14 +238,15 @@ void Delete(ListNode * pHead, ListNode * pToBeDeleted){
 	if(pToBeDeleted == NULL)
 		return NULL;
 	if(pToBeDeleted -> m_pNext != NULL ){
-		pToBeDeleted->m_nKey = pToBeDeleted -> m_pNext ->m_nKey;
 		ListNode *temp = pToBeDeleted;
+		pToBeDeleted->m_nKey = pToBeDeleted -> m_pNext ->m_nKey;
 		pToBeDeleted->m_pNext = pToBeDeleted ->m_pNext->m_pNext;
+		delete temp;
 	}
 	else{ //要删除节点为尾结点情况
 		if(pHead == pToBeDeleted){
-			delete pHead;
-			break;
+		 	pHead == NULL;
+			delete pToBeDeleted;
 		}
 		ListNode *pNode = pHead;
 		while(pNode -> m_pNext !=  pToBeDeleted)
